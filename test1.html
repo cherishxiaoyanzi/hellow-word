@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+        div{
+	width:500px;
+	}
+	table{border-collapse:collapse;table-layout:fixed;}
+	table th,table td{
+		border: 1px solid #eee;
+		padding: 5px;
+		word-wrap:break-word;
+	}
+	</style>
+	
+</head>
+<body>
+<div id="box">
+	<input type="button" value="按钮" id="btn" onclick="showMes();">
+	<input type="button" value="按钮2" id="btn2">
+	<input type="button" value="按钮3" id="btn3">
+	<a href="test.html" id="ha">test</a>
+</div>
+<script type="text/javascript">
+	/*function showMes(event){
+		var event=event || window.event;
+		//alert("dom0级事件处理！");
+		var ele=event.target || event.srcElement;
+		alert(ele);
+		event.stop
+	}*/
+	var btn2=document.getElementById("btn2");
+	var btn3=document.getElementById("btn3");
+	var box=document.getElementById("box");
+	var ha=document.getElementById("ha");
+	/*btn2.onclick=function(){
+		alert("DOM2级事件处理！");
+	}
+	//btn3.addEventListener("click",showMes,false);
+	//btn3.removeEventListener("click",showMes,false);
+	btn3.attachEvent("onclick",showMes);
+	btn3.detachEvent("onclick",showMes);*/
+	var eventUtil={
+		addHandler:function(element,type,handler){
+			if(element.addEventListener){
+              element.addEventListener(type,handler,false);
+			}else if(element.attachEvent){
+              element.attachEvent("on"+type,handler);
+			}else{
+              element["on"+type]=handler;
+			}
+		},
+		removeHandler:function(element,type,handler){
+			if(element.removeEventListener){
+                element.removeEventListener(type,handler,false);
+			}else if(element.detachEvent){
+                element.detacheEvent("on"+type,handler);
+			}else{
+                element["on"+type]=null;
+			}
+		},
+		getEvent:function(event){
+          return event?event:window.event;
+		},
+		getType:function(event){
+           return event.type;
+		},
+		getElement:function(event){
+            return event.target || event.srcElement;
+		},
+		preventDefault:function(event){
+			if(event.preventDefault){
+				event.preventDefault();
+			}else{
+				event.returnValue=false;
+			}
+		},
+		stopPropagation:function(event){
+			
+				return event.stopPropagation?event.stopPropagation():event.cancelBubble=true;
+			
+		}
+	}
+	eventUtil.addHandler(btn3,'click',function(e){
+		alert(eventUtil.getElement(e));
+		eventUtil.stopPropagation(e);
+	});
+	eventUtil.addHandler(ha,'click',function(e){
+		eventUtil.preventDefault(e);
+	});
+	eventUtil.addHandler(box,'click',function(){
+		alert(1);
+	})
+	//eventUtil.removeHandler(btn3,'click',showMes);
+</script>
+</body>
+</html>
